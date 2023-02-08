@@ -1,0 +1,18 @@
+{
+"name": "mekstein/usaepay",
+"description": "Tokenizing",
+"authors": [
+{
+"name": "MOshea",
+"email": "arye6700@gmail.com"
+}
+],
+"require": {
+"phpoffice/phpspreadsheet": "1.27.0"
+},
+"config": {
+"curl-options": {
+"CURLOPT_CAINFO": "C:\\xampp\\php\\extras\\ssl\\cacert.pem"
+}
+}
+}

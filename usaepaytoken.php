@@ -1,8 +1,25 @@
 <?php 
 
+$file = $_FILES["file"];
+if (!$file) {
+    throw new Exception("File not uploaded");
+}
+$handle = fopen($file["tmp_name"], "r");
+$header = fgetcsv($handle);
+$data = [];
+while ($row = fgetcsv($handle)) {
+    $data[] = [$row[0], $row[1]];
+}
+fclose($handle);
 
-$wsdl = "https://secure.usaepay.com/soap/gate/43R1QPKU/usaepay.wsdl";
-$sourceKey = "your source key";
+header("Content-Type: text/csv; charset=utf-8");
+header("Content-Disposition: attachment;filename=output.csv");
+$output = fopen("php://output", "w");
+fputcsv($output, ["CustNum", "MethodID", "Token"]);
+
+
+$wsdl = "https://sandbox.usaepay.com/soap/gate/43R1QPKU/usaepay.wsdl";
+$sourceKey = $_POST["sourceKey"];
 $pin = "1234";
 
 function getClient($wsdl) {
@@ -38,16 +55,24 @@ function getToken($sourceKey, $pin) {
 $client = getClient($wsdl);
 $token = getToken($sourceKey, $pin);
 
-$CustNum = 'your customer number';
-$MethodID = 'your Method ID';
 
 
-try {
+foreach ($data as $item) {
+  $CustNum = $item[0];
+  $MethodID = $item[1];
+
+  try {
     $result = $client->convertPaymentMethodToToken($token, $CustNum, $MethodID);
-    print_r($result);
+    // var_dump($result);
+    if (property_exists($result, "CardRef")) {
+        fputcsv($output, [$CustNum, $MethodID, $result->CardRef]);
+    } else {
+        fputcsv($output, [$CustNum, $MethodID, "Error: ResultToken not found"]);
+    }
   } catch (Exception $e) {
-    echo "An error occurred: " . $e->getMessage();
+    fputcsv($output, [$CustNum, $MethodID, "Error: " . $e->getMessage()]);
   }
-    
+}
+fclose($output);
   
 ?>

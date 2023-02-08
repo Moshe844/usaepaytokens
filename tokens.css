@@ -1,0 +1,146 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: #555;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 30px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background-color: blue;
+  color: #fff;
+  font-size: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #2a89e2;
+}
+
+button[type="button"] {
+  color: red;
+  margin-left: 10px;
+  height: 45px;
+  width: 35px;
+  cursor: pointer;
+}
+
+button[type="button"]:hover {
+  color: #333;
+}
+
+div {
+  display: flex;
+}
+
+.popup {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.popup-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.popup-header {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.yes-btn,
+.no-btn {
+  width: 40%;
+  padding: 10px;
+  margin: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.yes-btn {
+  background-color: green;
+  color: white;
+}
+
+.no-btn {
+  background-color: red;
+  color: white;
+}
+
+.back-arrow {
+  background-color: transparent;
+  color: #333;
+  cursor: pointer;
+  font-size: 5em;
+  height: 20px;
+  line-height: 40px;
+  text-align: center;
+  width: 20px;
+}
+
+.back-arrow:hover {
+  color: rgb(170, 163, 163);
+}

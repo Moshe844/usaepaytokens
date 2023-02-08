@@ -1,5 +1,5 @@
 <?php
-function getToken($source='Your source key', $pin='1234'){
+function getToken($source='_g6BALVW9vpPZ3jEqf5kwe4pIrqyvabY', $pin='1234'){
 $seed=12345;
 $clear=$source.$seed.$pin;
 //echo "\n$clear\n";
