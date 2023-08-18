@@ -6,16 +6,14 @@ ini_set("display_startup_errors", 1);
 error_reporting(E_ALL);
 
 require "vendor/autoload.php";
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $wsdl = "https://sandbox.usaepay.com/soap/gate/43R1QPKU/usaepay.wsdl";
+    $wsdl = "https://secure.usaepay.com/soap/gate/43R1QPKU/usaepay.wsdl";
     $sourceKey = $_POST["sourceKey"];
-    $pin = "1234";
+    $pin  = $_POST["pin"];
 
-    function getClient($wsdl)
-    {
+    function getClient($wsdl) {
         return new SoapClient($wsdl, [
             "trace" => 1,
             "exceptions" => 1,
@@ -29,8 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ]);
     }
 
-    function getToken($sourceKey, $pin)
-    {
+    function getToken($sourceKey, $pin) {
         $seed = time() . rand();
 
         return [
@@ -49,42 +46,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Load the customer numbers from the uploaded Excel file
     try {
-        // Load the customer numbers from the uploaded Excel file
         $file = $_FILES["file"];
         if (!$file) {
             throw new Exception("File not uploaded");
         }
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load(
-            $file["tmp_name"]
-        );
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file["tmp_name"]);
         $worksheet = $spreadsheet->getActiveSheet();
-        $customer_numbers = $worksheet->toArray();
+        $customer_numbers = array_column($worksheet->toArray(), 0);
 
         // Generate the method ID for each customer number
         header("Content-Type: text/csv; charset=utf-8");
         header("Content-Disposition: attachment;filename=output.csv");
         $output = fopen("php://output", "w");
-        // fputcsv($output, ["Amount", "City"]);
+        fputcsv($output, ["CustNum", "MethodID"]);
+        
         foreach ($customer_numbers as $customer_number) {
             try {
-              $data = $client->getCustomer($token, $customer_number[0]);
-              $csv_data = [ $data->CustNum,  $data->PaymentMethods[0]->MethodID];
-              fputcsv($output, $csv_data);
-
+                $data = $client->getCustomer($token, $customer_number);
+                if ($data && isset($data->PaymentMethods)) {
+                    foreach ($data->PaymentMethods as $paymentMethod) {
+                        if (isset($paymentMethod->MethodID)) {
+                            $csv_data = [$data->CustNum, $paymentMethod->MethodID];
+                            fputcsv($output, $csv_data);
+                        }
+                    }
+                }
             } catch (soapFault $e) {
-                // Code to handle the exception
                 if ($e->getMessage() != "40030: Customer Not Found") {
-                echo "An error occurred for customer number: " .
-                    $customer_number[0] .
-                    " - " .
-                    $e->getMessage() .
-                    "\n";
+                    echo "An error occurred for customer number: {$customer_number} - {$e->getMessage()}\n";
+                }
             }
         }
-      }
+        
         fclose($output);
     } catch (Exception $e) {
-        echo "An error occurred: " . $e->getMessage() . "\n";
+        echo "An error occurred: {$e->getMessage()}\n";
     }
 }
 

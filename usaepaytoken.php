@@ -18,9 +18,9 @@ $output = fopen("php://output", "w");
 fputcsv($output, ["CustNum", "MethodID", "Token"]);
 
 
-$wsdl = "https://sandbox.usaepay.com/soap/gate/43R1QPKU/usaepay.wsdl";
+$wsdl = "https://secure.usaepay.com/soap/gate/43R1QPKU/usaepay.wsdl";
 $sourceKey = $_POST["sourceKey"];
-$pin = "1234";
+$pin = $_POST["pin"];
 
 function getClient($wsdl) {
   return new SoapClient($wsdl, array(

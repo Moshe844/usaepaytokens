@@ -18,6 +18,9 @@
          <label for="sourceKey">Source Key:</label>
         <input type="text" name="sourceKey" id="sourceKey">
      <br><br>
+     <label for="pin">PIN:</label>
+      <input type="password" name="pin" id="pin" style="height: 30px;"> 
+      <br><br>
       <input type="submit" value="Submit">
     </form>
 
